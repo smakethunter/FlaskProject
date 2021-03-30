@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Services{% endblock %}</h1>
+
+{% endblock %}
+
+{% block content %}
+  {% for service in services %}
+    <article class="post">
+      <header >
+        <div >
+          <h1 ><a href = "{{ url_for('ml_api.service', id=service['id']) }}">{{ service['name'] }}</a></h1>
+          <div class="about">
+              <a>{{ service['description'] }}</a>
+          </div>
+            <div class="about">
+              <a>{{ service['id'] }}</a>
+          </div>
+        </div>
+      </header>
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}

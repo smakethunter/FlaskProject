@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Welcome to ml API{% endblock %}</h1>
+
+{% endblock %}
+
+{% block content %}
+
+    <article class="post">
+      <header >
+        <div >
+          <h1 ><a>{{ service['name'] }}</a></h1>
+          <div class="about">
+              <a>{{ service['description'] }}</a>
+          </div>
+        </div>
+      </header>
+    </article>
+    <form method="post">
+    <label for="title">Company</label>
+    <input name="title" id="title" value="{{ request.form['title']}}" required>
+       <input type="submit" value="Predict">
+  </form>
+
+      <hr>
+
+
+{% endblock %}

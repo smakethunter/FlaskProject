@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block header %}
+  <h1>{% block title %}Predicton results{% endblock %}</h1>
+
+{% endblock %}
+
+{% block content %}
+    <article class="post">
+      <header >
+        <div >
+          <h1 ><a> Predicction results for: {{ service }}</a></h1>
+        </div>
+          <div>
+              {% if tomorrow>=0 %}
+              <a>Tomorow
+                  + {{ tomorrow }}%</a>
+              {% elif tomorrow>0 %}
+              <a>Tomorow
+                  - {{ tomorrow }}%</a>
+              {% endif %}
+          </div>
+      </header>
+    </article>
+<body>
+    <img  src = "data:image/png;base64, {{ response }}",  alt="Red dot" />
+  </body>
+
+
+
+{% endblock %}
