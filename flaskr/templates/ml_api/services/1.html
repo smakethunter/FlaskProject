@@ -1,10 +1,71 @@
-{% extends 'base.html' %}
+{#{% extends 'base.html' %}#}
+<!doctype html>
+
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-5.0.0-beta3-examples/assets/dist/css/bootstrap.min.css') }}" >
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-5.0.0-beta3-examples/dashboard/dashboard.css') }}" >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.82.0">
+    <title>Dashboard Template · Bootstrap v5.0</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/dashboard/">
+
+
+
+    <!-- Bootstrap core CSS -->
+<link href="/Users/smaket/PycharmProjects/flaskProject/flaskr/static/bootstrap-5.0.0-beta3-examples/assets/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+
+    <!-- Custom styles for this template -->
+    <link href="../static/bootstrap-5.0.0-beta3-examples/dashboard/dashboard.css" rel="stylesheet">
+  </head>
+
+
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">MLDemo</a>
+
+            <a class="nav-link" href="{{ url_for('ml_api.api_selection') }}">
+              <span data-feather="file"></span>
+              Prediction model
+            </a>
+
+  <ul class="navbar-nav px-3">
+    {% if g.user %}
+      <li class="nav-item text-nowrap"><a class="nav-link">{{ g.user['username'] }}</a>
+      <li class="nav-item text-nowrap"><a class="nav-link" href="{{ url_for('auth.logout') }}">Log Out</a>
+    {% else %}
+      <li class="nav-item text-nowrap"><a class="nav-link" href="{{ url_for('auth.register') }}">Register</a>
+      <li class="nav-item text-nowrap"><a class="nav-link" href="{{ url_for('auth.login') }}">Log In</a>
+    {% endif %}
+  </ul>
+</header>
 
 {% block header %}
   <h1>{% block title %}Welcome to ml API{% endblock %}</h1>
 
 {% endblock %}
-
 {% block content %}
 
     <article class="post">
@@ -23,7 +84,34 @@
        <input type="submit" value="Predict">
   </form>
 
+    <article class="post">
+      <header >
+      {% if image !=0 %}
+        <div >
+          <h1 ><a> Predicction results for: {{ service }}</a></h1>
+        </div>
+      {% endif %}
+          <div>
+              {% if tomorrow>0 %}
+              <a>Tomorrow
+                  + {{ tomorrow }}%</a>
+              {% elif tomorrow>0 %}
+              <a>Tomorrow
+                  - {{ tomorrow }}%</a>
+
+              {% endif %}
+          </div>
+      </header>
+    </article>
+    <a href="/dashapp/"> dashAppp</a>
       <hr>
+{% if image !=0 %}
+{#    <body>#}
+    <img class="plot"  src = "data:image/png;base64, {{ response }}",  alt="Red dot" />
+{#  </body>#}
+    {% endif %}
+
+
 
 
 {% endblock %}

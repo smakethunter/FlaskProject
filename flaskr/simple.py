@@ -31,7 +31,7 @@ class Simple(Model):
         result = []
         print(self.train_set[['Diff1', 'Diff2', 'Diff5']].values.shape)
         for epoch in range(epochs):
-            self.model.fit(self.train_set[['Diff1', 'Diff2', 'Diff5']].values, self.train_set[['tomorrow']].values, batch_size=32, epochs=1)
+            self.model.fit(self.train_set[['Diff1', 'Diff2', 'Diff5']].values, self.train_set[['tomorrow']].values, batch_size=32, epochs=30)
             if self.test_set is not None:
                 result.append(self.test())
         return result

@@ -2,12 +2,13 @@ import yfinance
 import pandas as pd
 import numpy as np
 def compute_diff(data):
+
     avg_price = (data['Open']+ data['High'])/2
     data['AveragePrice'] = avg_price
 
     for interval in [1, 2, 5, 10, 20, 30]:
         data[f'Diff{interval}'] = data['AveragePrice'].pct_change(periods=interval)
-    data['tomorrow'] = data['Diff1'].pct_change(periods=1)
+    data['tomorrow'] = (-data['AveragePrice']+data['AveragePrice'].shift(periods=-1))/data['AveragePrice'].shift(periods=-1)
     data = data.dropna()
     return data
 

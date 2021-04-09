@@ -1,20 +1,25 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, url_for,make_response
+    Blueprint, flash, g, redirect, render_template, url_for,make_response, current_app
 )
+import dash.dash
 from flask import request
 from werkzeug.exceptions import abort
-
-import random
 from flaskr.db import get_db
-import datetime
-from io import BytesIO
+import tensorflow as tf
+from flaskr.parse import get_historical_data
+from flaskr.dashapp1 import dashboard
 import base64
-import numpy as np
-
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from io import BytesIO
 from matplotlib.figure import Figure
-from matplotlib.dates import DateFormatter
+import pandas as pd
+from flask import Flask, render_template, jsonify, request
+from werkzeug.utils import secure_filename
+import os
 
+import urllib.request
+from datetime import datetime
+from flask_dropzone import Dropzone
+import plotly.express as px
 bp = Blueprint('ml_api', __name__)
 
 @bp.route('/ml_api/selection')
@@ -45,33 +50,11 @@ def service(id):
 
 @bp.route('/ml_api/services/1', methods = ('GET', 'POST'))
 def stock_prediction():
-    service = get_db().execute("SELECT name, description FROM services WHERE id = ? ", (1,)).fetchone()
-    if request.method == 'POST':
-        company = request.form['title']
-        error = None
-        if not company:
-            error = 'Company required'
-        if error is not None:
-            flash(error)
-        else:
-            return redirect(url_for('ml_api.predict', service = company))
-    return render_template('ml_api/services/1.html', service=service, request=request)
+       return redirect(url_for('/dashapp/'))
 
 @bp.route('/ml_api/services/1_pred/str/<service>', methods = ('GET', 'POST'))
 def predict(service):
-    from flaskr.parse import get_historical_data
-    from flaskr.simple import Simple
-    import matplotlib.pyplot as plt
-    import numpy as np
 
-
-
-
-    import base64
-    from io import BytesIO
-
-    from matplotlib.figure import Figure
-    import pandas as pd
     # Generate the figure **without using pyplot**.
     try:
         data = get_historical_data(str(service).lower())
@@ -83,33 +66,89 @@ def predict(service):
     for interval in [1, 2, 5]:
         next_day[f'Diff{interval}'] = data.iloc[-interval]['AveragePrice']
     next_day['tomorrow'] = 0
-    model = Simple(data, all_data = True)
+    model = tf.keras.models.load_model('/Users/smaket/PycharmProjects/flaskProject/flaskr/my_model')
 
-
-
-    print(next_day)
-    result = np.array(model.learn(32))
-
-    fig = Figure(figsize=(10,10))
-    ax = fig.subplots(2,1)
+    fig = Figure(figsize=(10,8))
+    ax = fig.subplots()
     labels = list(data.index[-14:].date)
     labels = [x.strftime("%m/%d/%Y") for x in labels]
-    ax[0].plot(labels,data['AveragePrice'].tail(14))
-    ax[0].set_title('Last 14 days')
-    ax[1].set_title('Model accuracy')
+    ax.plot(labels,data['AveragePrice'].tail(14),scaley=True)
+    ax.set_title('Last 14 days')
     print(labels)
-    ax[0].set_xticklabels(labels, rotation=45, horizontalalignment="right")
-    ax[1].plot(result[:, 0])
-    # Save it to a temporary buffer.
+    ax.set_xticklabels(labels, rotation=45, horizontalalignment="right")
     buf = BytesIO()
     fig.savefig(buf, format="png")
-    tomorrow = model.model.predict(next_day[['Diff1', 'Diff2', 'Diff5']].values)[0, 0]
+    f = px.line(data['AveragePrice'].tail(14), title='Average price in last 14 days')
+    #f.show()
+    import plotly
+    #plotly.io.orca.config.executable = '/Users/smaket/miniforge3/pkgs/plotly-orca-3.4.2-0/bin/orca'
+
+    import plotly.io as pio
+
+    img = pio.to_image(f, format='png', engine='kaleido')
+    buf = BytesIO(img)
+
+    from plotly.io import to_image
+
+
+    tomorrow = model.predict(next_day[['Diff1', 'Diff2', 'Diff5']].values)[0, 0]
     tomorrow = round(tomorrow, 2)
     # Embed the result in the html output.
-    data = base64.b64encode(buf.getbuffer()).decode("ascii")
-    return render_template('/ml_api/services/1_pred.html',response = data, service = service, tomorrow = tomorrow)
+    image = base64.b64encode(buf.getbuffer()).decode("ascii")
+    from dash.dependencies import Input, Output
+
+    return render_template('/ml_api/services/1.html',response = image, service = service, tomorrow = tomorrow, dash_url = f, image=1)
 
 
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+
+@bp.route('/ml_api/services/2_error')
+def holds_detection_with_error():
+    info = 'Invalid Uplaod only txt, pdf, png, jpg, jpeg, gif'
+    return render_template('/ml_api/services/2.html', info=info)
+
+
+@bp.route('/ml_api/services/2')
+def holds_detection():
+
+    info =''
+    return render_template('/ml_api/services/2.html', info = info)
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@bp.route("/upload", methods=["POST", "GET"])
+def upload():
+    msg = ''
+    db =get_db()
+    if request.method == 'POST':
+        file = request.files.get('file')
+        filename = secure_filename(file.filename)
+        buf = BytesIO()
+        data = base64.b64encode(buf.getbuffer()).decode("ascii")
+
+        if file and allowed_file(file.filename):
+
+            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+
+            db.execute("INSERT INTO uploads (file_name) VALUES (?)", (file.filename,))
+            db.commit()
+
+            print('File successfully uploaded ' + file.filename + ' to the database!')
+            return detect(image=filename)
+        else:
+            msg = 1
+
+
+
+    return redirect(url_for('ml_api.holds_detection_with_error'))
+
+def detect(image):
+    print(image)
+    return redirect(url_for('ml_api.api_selection'))
 
 
 

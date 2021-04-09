@@ -1,6 +1,9 @@
-<!doctype html>
+"""Plotly Dash HTML layout override."""
 
-<title>{% block title %}{% endblock %} - Flaskr</title>
+html_layout = """
+<!DOCTYPE html>
+    <html>
+        <title>Stock Prediction</title>
 
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <link href="../static/bootstrap-5.0.0-beta3-examples/assets/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -40,42 +43,45 @@
     <!-- Custom styles for this template -->
     <link href="../static/bootstrap-5.0.0-beta3-examples/dashboard/dashboard.css" rel="stylesheet">
   </head>
-
-
-<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+        <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
   <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/">MLDemo</a>
 
-            <a class="nav-link" href="{{ url_for('ml_api.api_selection') }}">
+            <a class="nav-link" href="/ml_api/selection">
               <span data-feather="file"></span>
               Prediction model
             </a>
 
   <ul class="navbar-nav px-3">
-    {% if g.user %}
-      <li class="nav-item text-nowrap"><a class="nav-link">{{ g.user['username'] }}</a>
-      <li class="nav-item text-nowrap"><a class="nav-link" href="{{ url_for('auth.logout') }}">Log Out</a>
-    {% else %}
-      <li class="nav-item text-nowrap"><a class="nav-link" href="{{ url_for('auth.register') }}">Register</a>
-      <li class="nav-item text-nowrap"><a class="nav-link" href="{{ url_for('auth.login') }}">Log In</a>
-    {% endif %}
+      <li class="nav-item text-nowrap"><a class="nav-link" href="/ml_api/services/1">Back</a>    
   </ul>
 </header>
-<body>
-<br><br>
 
-    <section>
+            </header>
+            {%app_entry%}
+            <footer>
+                {%config%}
+                {%scripts%}
+                {%renderer%}
+            </footer>
+        </body>
+    </html>
+"""
 
+"""
+import dash_core_components as dcc
+import dash_html_components as html
 
-    {% block header %}
-    {% endblock %}
-
-  {% for message in get_flashed_messages() %}
-    <div class="flash">{{ message }}</div>
-  {% endfor %}
-  {% block content %}
-  {% endblock %}
-{#</section>#}
-    </section>
-  </body>
-
-</html>
+layout = html.Div([
+    html.H1('Stock Tickers'),
+    dcc.Dropdown(
+        id='my-dropdown',
+        options=[
+            {'label': 'Coke', 'value': 'COKE'},
+            {'label': 'Tesla', 'value': 'TSLA'},
+            {'label': 'Apple', 'value': 'AAPL'}
+        ],
+        value='COKE'
+    ),
+    dcc.Graph(id='my-graph')
+], style={'width': '500'})
+"""

@@ -132,11 +132,48 @@ nav ul li a, nav ul li span, header .action {
     resize: vertical;
 }
 
-input.danger {
+input
+.danger {
     color: #cc2f2e;
+}
+
+input.upload{
+    color: black;
+    size: landscape;
+    width: max-content;
+    height: content-box;
+
+}
+form.upload{
+    color: black;
+
 }
 
 input[type=submit] {
     align-self: start;
     min-width: 10em;
+}
+div.upload{
+    height: 200px;
+    width: 50%;
+    background-color: powderblue;
+}
+
+div.submit{
+    color: #999999;
+}
+img.plot{
+    width: 100%;
+    height: auto;
+}
+div.alert-danger{
+    background-color: darkorange;
+    width: 100%;
+    height: auto;
+}
+input.dropbox{
+    height: 200px;
+    width: 50%;
+    border-style: dashed;
+    border-color: #0c63e4;
 }
