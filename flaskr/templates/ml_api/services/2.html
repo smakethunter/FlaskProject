@@ -1,5 +1,68 @@
-{% extends 'base.html' %}
+{#{% extends 'base.html' %}#}
+<!doctype html>
 
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-5.0.0-beta3-examples/assets/dist/css/bootstrap.min.css') }}" >
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-5.0.0-beta3-examples/dashboard/dashboard.css') }}" >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.82.0">
+    <title>Dashboard Template · Bootstrap v5.0</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/dashboard/">
+
+
+
+    <!-- Bootstrap core CSS -->
+<link href="/Users/smaket/PycharmProjects/flaskProject/flaskr/static/bootstrap-5.0.0-beta3-examples/assets/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+
+    <!-- Custom styles for this template -->
+    <link href="../static/bootstrap-5.0.0-beta3-examples/dashboard/dashboard.css" rel="stylesheet">
+  </head>
+
+
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">MLDemo</a>
+
+            <a class="nav-link" href="{{ url_for('ml_api.api_selection') }}">
+              <span data-feather="file"></span>
+              Prediction model
+            </a>
+
+  <ul class="navbar-nav px-3">
+    {% if g.user %}
+      <li class="nav-item text-nowrap"><a class="nav-link">{{ g.user['username'] }}</a>
+      <li class="nav-item text-nowrap"><a class="nav-link" href="{{ url_for('auth.logout') }}">Log Out</a>
+    {% else %}
+      <li class="nav-item text-nowrap"><a class="nav-link" href="{{ url_for('auth.register') }}">Register</a>
+      <li class="nav-item text-nowrap"><a class="nav-link" href="{{ url_for('auth.login') }}">Log In</a>
+    {% endif %}
+  </ul>
+</header>
+<br>
+<br>
 {% block content %}
 
 
@@ -9,14 +72,35 @@
 </div>
     {% endif %}
 
-   <form class="upload" action = "/upload" method = "POST" enctype = "multipart/form-data">
-       <input class="dropbox" type = "file" name = "file" />
-         <div class="submit"><input type = "submit"/></div>
 
-   </form>
-    <img>
+    <form class="upload" action = "/upload" method = "POST" enctype = "multipart/form-data" >
+        <div class = "wrapper">
+           <div class="first">
+            <input class="dropbox"  type = "file" name = "file" onchange="loadFile(event)"/>
+           {#<input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)" style="display: none;">#}
+           </div>
+             <div class="submit"><input type = "submit"/></div>
+           <div class = "second">
+                <p><img id="output" width="200" /></p>
+            </div>
+        </div>
+    </form>
+
+
+
+
+{#<p><input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)" style="display: none;"></p>#}
+{#<p><label for="file" style="cursor: pointer;">Upload Image</label></p>#}
+
 
 <script>
+var loadFile = function(event) {
+	var image = document.getElementById('output');
+	image.src = URL.createObjectURL(event.target.files[0]);
+};
+</script>
+<script>
+
 let dropbox;
 
 dropbox = document.getElementById("dropbox");
@@ -36,17 +120,20 @@ function dragover(e) {
 function drop(e) {
   e.stopPropagation();
   e.preventDefault();
-
   const dt = e.dataTransfer;
   const files = dt.files;
-
   handleFiles(files);
-  function handleFiles(files) {
+}
+
+
+function handleFiles(files) {
+
+  const preview = document.createElement("div")
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
 
     if (!file.type.startsWith('image/')){ continue }
-
+    console.log(file.name)
     const img = document.createElement("img");
     img.classList.add("obj");
     img.file = file;
@@ -56,9 +143,10 @@ function drop(e) {
     reader.onload = (function(aImg) { return function(e){
         aImg.src = e.target.result; }; })(img);
     reader.readAsDataURL(file);
-  }
 
-}
+  }
+  const currentDiv = document.getElementById("div1");
+    document.body.insertBefore(preview, currentDiv);
 }
 </script>
 

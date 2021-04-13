@@ -19,7 +19,7 @@ import tensorflow as tf
 import dash_table
 import datetime
 from datetime import date
-
+import plotly.graph_objects as go
 def init_dashboard(server):
     """Create a Plotly Dash dashboard."""
     dash_app = dash.Dash(
@@ -58,7 +58,7 @@ def init_dashboard(server):
     ),
     dcc.Graph(id='my-graph'),
     html.Br(),
-
+    html.Div(id = 'my-table')
 
 
     ],
@@ -67,16 +67,19 @@ def init_dashboard(server):
         style={'width': '500'},
 
     ),
-    html.Div(
-        children=[
-            dash_table.DataTable(id="database-table",
-                                 style_cell=dict(textAlign='left'),
-                                 style_header=dict(backgroundColor="paleturquoise")
-
-                                 )
-        ], style = {'width': '500', 'height':500}
-
-    )
+    # html.Div(id = 'table',
+    #     children=[
+    #         dash_table.DataTable(id="database-table",
+    #                              columns=[
+    #                                  'Date', 'AveragePrice', 'Diff1', 'tomorrow'
+    #                              ],
+    #                              page_current=0,
+    #                              ),
+    #
+    #
+    #     ]
+    #
+    # )
 
     ]
 

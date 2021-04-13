@@ -8,8 +8,10 @@ from flaskr.parse import compute_diff
 import pandas as pd
 import tensorflow as tf
 import dash_table
+import plotly.graph_objects as go
 import datetime
 from datetime import date
+import dash_html_components as html
 def register_callbacks(dashapp):
     @dashapp.callback(Output('my-graph', 'figure'), [Input('my-dropdown', 'value'), Input('time-select', 'value')])
     def update_graph(selected_dropdown_value, selected_period):
@@ -35,16 +37,27 @@ def register_callbacks(dashapp):
                 # 'margin': {'l': 40, 'r': 0, 't': 20, 'b': 30}
             }
         }
-    @dashapp.callback(Output("database-table", 'data' ), [Input('my-dropdown', 'value')])
+    @dashapp.callback(Output("my-table", 'children' ), [Input('my-dropdown', 'value'), Input('time-select', 'value')])
 
-    def create_data_table(selected_dropdown_value):
+    def create_data_table(selected_dropdown_value,selected_period):
         """Create Dash datatable from Pandas DataFrame."""
         df = pdr.get_data_yahoo(selected_dropdown_value, start=dt(2017, 1, 1), end=dt.now())
         df = compute_diff(df)
         df['Date'] = df.index.strftime('%d-%m-%Y')
         print(df[[ 'AveragePrice', 'Diff1', 'tomorrow']].tail(14))
-        table = df[[ 'AveragePrice', 'Diff1', 'tomorrow']].tail(14).to_dict('records') #if selected_period > 0 else df[['Date','AveragePrice', 'Diff1', 'tomorrow']][:].to_dict("records")
+        table = df[['Date','AveragePrice', 'Diff1', 'tomorrow']].tail(selected_period) if selected_period > 0 else df[['Date','AveragePrice', 'Diff1', 'tomorrow']]
         print(table)
-        return table
+        t = dash_table.DataTable(
+        id='table',
+        columns = [{"name": i, "id": i}
+                 for i in table.columns],
+        data=table.to_dict('records'),
+        style_cell=dict(textAlign='left'),
+        style_header=dict(backgroundColor = 'lightblue'),
+
+        )
+
+
+        return t
 
 

@@ -173,7 +173,25 @@ div.alert-danger{
 }
 input.dropbox{
     height: 200px;
-    width: 50%;
+    /*width: 100%;*/
     border-style: dashed;
     border-color: #0c63e4;
+}
+
+#wrapper {
+    width: 500px;
+    border: 1px solid black;
+    position:relative;
+}
+#first {
+    border: 1px solid red;
+    float:left;
+    width:50%;
+    position: relative;
+}
+#second {
+    border: 1px solid green;
+    float:left;
+    width:50%;
+    position: relative;
 }

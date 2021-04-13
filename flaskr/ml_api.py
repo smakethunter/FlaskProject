@@ -79,9 +79,6 @@ def predict(service):
     buf = BytesIO()
     fig.savefig(buf, format="png")
     f = px.line(data['AveragePrice'].tail(14), title='Average price in last 14 days')
-    #f.show()
-    import plotly
-    #plotly.io.orca.config.executable = '/Users/smaket/miniforge3/pkgs/plotly-orca-3.4.2-0/bin/orca'
 
     import plotly.io as pio
 
@@ -127,8 +124,6 @@ def upload():
     if request.method == 'POST':
         file = request.files.get('file')
         filename = secure_filename(file.filename)
-        buf = BytesIO()
-        data = base64.b64encode(buf.getbuffer()).decode("ascii")
 
         if file and allowed_file(file.filename):
 
@@ -147,7 +142,23 @@ def upload():
     return redirect(url_for('ml_api.holds_detection_with_error'))
 
 def detect(image):
-    print(image)
+    from tensorflow.keras.preprocessing.image import load_img, img_to_array
+    from tensorflow.keras.models import load_model
+    import numpy as np
+
+    image = load_img(image,target_size=(224,224,3), interpolation='bicubic')
+    img = img_to_array(image)
+
+    path_to_model = '../dog_app_data/20210413-173553-whole_data_adam_mnv2.h5'
+    breed_predictor = load_model(path_to_model)
+    list_of_breeds = pd.read_csv('../dog_app_data/labels.csv')['breed'].to_list()
+    pred = breed_predictor.predict(np.expand_dims(img))
+    breed = list_of_breeds[np.argmax(pred)]
+    confidence = np.argmax(pred)
+    buf = BytesIO()
+    image.save(buf, format="PNG")
+    image_html = base64.b64encode(buf.getbuffer()).decode("ascii")
+    return render_template('templates/ml_api/services/2_pred.html',)
     return redirect(url_for('ml_api.api_selection'))
 
 
