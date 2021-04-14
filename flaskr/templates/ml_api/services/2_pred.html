@@ -3,15 +3,11 @@
 <head>
 
     <meta charset="UTF-8">
-    <title>{{ image }}</title>
+{#    <title>{{ image }}</title>#}
 </head>
 <body>
-<iframe
-
-              style='position: absolute; background: transparent; width: 95%; height:100%;'
-              src="http://localhost:59819" width=700 height=600
-              >
-            </iframe>
+<img class="plot"  src = "data:image/png;base64, {{ image1 }}",  alt="Red dot" />
+<img class="plot"  src = "data:image/png;base64, {{ image2 }}",  alt="Red dot" />
 
 </body>
 </html>

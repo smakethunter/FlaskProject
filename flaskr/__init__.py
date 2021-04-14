@@ -2,17 +2,16 @@ import os
 import dash
 from flask import Flask
 from flask.helpers import get_root_path
-from flask_dropzone import Dropzone
-dropzone = Dropzone()
+
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
-        UPLOAD_FOLDER='/Users/smaket/PycharmProjects/flaskProject/files'
+        UPLOAD_FOLDER='//home/smaket/PycharmProjects/flaskProject2/files'
     )
-    dropzone.init_app(app)
+
 
 
 

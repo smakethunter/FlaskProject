@@ -21,3 +21,12 @@ CREATE TABLE uploads (
   file_name varchar(150) NOT NULL,
   upload_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE services (
+    id INTEGER PRIMARY KEY AUTOINCREMENT ,
+    author_id INTEGER,
+    created TIMESTAMP NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    name varchar,
+    description TEXT,
+    url_dir VARCHAR
+
+);
