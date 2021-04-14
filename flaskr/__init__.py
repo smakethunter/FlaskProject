@@ -9,7 +9,7 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
-        UPLOAD_FOLDER='//home/smaket/PycharmProjects/flaskProject2/files'
+        UPLOAD_FOLDER='/Users/smaket/PycharmProjects/flaskProject/files'
     )
 
 

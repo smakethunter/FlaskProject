@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 BATCH_SIZE = 1
 NUM_IMAGES = 1
 IMG_SIZE=224
-labels_breed=pd.read_csv('/home/smaket/PycharmProjects/flaskProject2/dog_app_data/labels.csv')['breed'].to_numpy()
+labels_breed=pd.read_csv('/Users/smaket/PycharmProjects/flaskProject/dog_app_data/labels.csv')['breed'].to_numpy()
 
 breeds=np.unique(labels_breed)
 print(len(breeds))
