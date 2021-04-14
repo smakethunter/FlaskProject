@@ -79,11 +79,12 @@ def plot_model_guesses(predictions, true_label, index):
     summary = pd.DataFrame({'breed': breed_names, 'propability': proba})
     summary = summary.sort_values(by='propability')
 
-    fig, ax = plt.subplots(figsize=(10, 10))
+    fig, ax = plt.subplots(figsize=(12,12))
     top_plot = plt.bar(summary['breed'], summary['propability'])
     ax.set_xticks(breed_names)
     ax.set_title('Top 10 guesses')
     ax.set_ylabel("Confidence in %")
+    ax.set_xticklabels(breed_names, rotation=45)
 
     true = breeds[np.argmax(true_label)]
     if true in breed_names:
@@ -95,7 +96,7 @@ def predict_and_visualize(model,targets, index=0, random=False):
 
     predictions = model.predict(targets, verbose=1)
     print(predictions)
-    fig,ax = plt.subplots(figsize=(6, 6))
+    fig,ax = plt.subplots(figsize=(6,6))
 
     ax.imshow(imgs[index])
 
