@@ -19,13 +19,21 @@ def register_callbacks(dashapp):
         df = pdr.get_data_yahoo(selected_dropdown_value, start=dt(2017, 1, 1), end=dt.now())
 
         data = compute_diff(df)
-        model = tf.keras.models.load_model('/Users/smaket/PycharmProjects/flaskProject/flaskr/my_model')
-        #model.fit(data[['Diff1', 'Diff2', 'Diff5']].values,data['tomorrow'].values, batch_size=32, epochs=10)
+        try:
+            model = tf.keras.models.load_model('/Users/smaket/PycharmProjects/flaskProject/flaskr/my_model', )
+            #model.fit(data[['Diff1', 'Diff2', 'Diff5']].values,data['tomorrow'].values, batch_size=32, epochs=10)
 
-        tomorrow = model.predict(data[['Diff1', 'Diff2', 'Diff5']].tail(1).values)[0, 0]
-        tomorrow = float(round(tomorrow, 2))
+            tomorrow = model.predict(data[['Diff1', 'Diff2', 'Diff5']].tail(1).values)[0, 0]
+            tomorrow = float(round(tomorrow, 2))
+        except Exception:
+            tomorrow = None
         #print(tomorrow)
-        sign = '' if tomorrow <= 0 else '+'
+
+        if tomorrow is not None:
+            sign = '' if tomorrow <= 0 else '+'
+            forecast = "Tomorrow's Forecast {}{:.2f}".format(sign, tomorrow)
+        else:
+            forecast = "Tomorrow's Forecast - No data or predictor error"
         return {
             'data': [{
                 'x': data.index[selected_period:] if selected_period > 0 else df.index ,
@@ -33,7 +41,7 @@ def register_callbacks(dashapp):
             }],
 
             'layout': {
-                'title': "Tomorrow's Forecast {}{:.2f}".format(sign, tomorrow),
+                'title': forecast,
                 # 'margin': {'l': 40, 'r': 0, 't': 20, 'b': 30}
             }
         }

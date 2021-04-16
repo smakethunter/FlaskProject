@@ -72,19 +72,22 @@
 </div>
     {% endif %}
 
+<div class = "wrapper">
+        <div style="width: 50%; height: 50%; float:left;">
+            <form class="upload" action = "/upload" method = "POST" enctype = "multipart/form-data" >
 
-    <form class="upload" action = "/upload" method = "POST" enctype = "multipart/form-data" >
-        <div class = "wrapper">
-           <div class="first">
-            <input class="dropbox"  type = "file" name = "file" onchange="loadFile(event)"/>
-           {#<input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)" style="display: none;">#}
-           </div>
-             <div class="submit"><input type = "submit"/></div>
-           <div class = "second">
-                <p><img id="output" width="200" /></p>
-            </div>
+
+                <input class="dropbox"  type = "file" name = "file" onchange="loadFile(event)"/>
+               {#<input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)" style="display: none;">#}
+
+                 <div class="submit"><input type = "submit"/></div>
+            </form>
         </div>
-    </form>
+        <div style="width: 50%; height:200px; float:right;">
+                <img id="output"   height="400" />
+        </div>
+</div>
+
 
 
 
@@ -149,7 +152,4 @@ function handleFiles(files) {
     document.body.insertBefore(preview, currentDiv);
 }
 </script>
-
-
-
 {% endblock %}

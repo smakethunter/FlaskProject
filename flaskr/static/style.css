@@ -173,7 +173,7 @@ div.alert-danger{
 }
 input.dropbox{
     height: 200px;
-    /*width: 100%;*/
+    width: 50%;
     border-style: dashed;
     border-color: #0c63e4;
 }
@@ -183,15 +183,21 @@ input.dropbox{
     border: 1px solid black;
     position:relative;
 }
-#first {
-    border: 1px solid red;
-    float:left;
-    width:50%;
-    position: relative;
-}
-#second {
-    border: 1px solid green;
-    float:left;
-    width:50%;
-    position: relative;
-}
+#parent_div_1{
+     display:flex;
+     flex-wrap: wrap;
+  }
+ .left{
+   width:140px;
+   float:left;
+   height:100%;
+ }
+
+ .right{
+   margin-left:140px;
+ }
+
+ img.output{
+     height: 200px;
+     display: flex;
+ }

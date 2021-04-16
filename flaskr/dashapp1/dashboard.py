@@ -44,8 +44,14 @@ def init_dashboard(server):
             {'label': 'Coke', 'value': 'COKE'},
             {'label': 'Tesla', 'value': 'TSLA'},
             {'label': 'Apple', 'value': 'AAPL'},
+            {'label': 'Facebook', 'value': 'FB'},
+            {'label': 'Amazon', 'value': 'AMZN'},
+            {'label': 'Netflix', 'value': 'NFLX'},
+            {'label': 'Google/Alphabet', 'value': 'GOOG'},
+            {'label': 'Bitcoin', 'value': 'BTC'},
             {'label': 'Intel', 'value': 'INTC'}
         ],
+
         value='COKE'
     ),
     html.Br(),
